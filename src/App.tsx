@@ -454,7 +454,7 @@ function App() {
       {/* 桌面端服务展示 */}
       <section className="hidden md:block py-12 px-12">
         <div className="w-4/5 mx-auto">
-          <div className="p-8 flex flex-row gap-8 rounded-3xl" style={{minHeight: '450px'}}>
+          <div className="p-8 flex flex-row gap-8 rounded-3xl border-2" style={{minHeight: '450px', borderColor: '#B9CBDC'}}>
             <div className="w-3/4 grid grid-cols-2 gap-6">
               <div className="aspect-[3/3.5]">
                 <ImageCompareSlider
@@ -494,7 +494,7 @@ function App() {
       {/* 移动端服务展示 */}
       <section className="md:hidden py-8 px-4">
         <div className="w-full">
-          <div className="p-3 flex flex-col gap-4 rounded-3xl border-4 border-blue-500">
+          <div className="p-3 flex flex-col gap-4 rounded-3xl border-2" style={{borderColor: '#B9CBDC'}}>
             <div className="flex flex-col gap-3">
               <div className="aspect-square border-8 border-red-500">
                 <ImageCompareSlider

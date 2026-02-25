@@ -274,7 +274,7 @@ const ServicesSection = () => {
 
   return (
     <section className="py-12 md:py-24 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 border-2 py-8 md:py-12 bg-white" style={{ borderColor: '#B9CBDC' }}>
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-3xl md:text-4xl font-light tracking-wider mb-4" style={{ color: '#1F1F1F' }}>
             我们的服务项目
