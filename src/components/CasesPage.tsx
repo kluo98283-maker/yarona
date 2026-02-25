@@ -54,36 +54,47 @@ function CasesPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <section className="pt-32 pb-16 px-6 md:px-12">
+      <section className="pt-32 pb-20 px-6 md:px-12 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-3xl md:text-4xl font-light mb-4 tracking-wide" style={{color: '#1F1F1F'}}>
+          <div className="text-center mb-16">
+            <h1 className="text-3xl md:text-4xl font-light mb-6 tracking-wide" style={{color: '#1F1F1F'}}>
               真实案例展示
             </h1>
-            <p className="text-base md:text-lg tracking-wide" style={{color: '#6B7280'}}>
+            <p className="text-base md:text-lg tracking-wide mb-8" style={{color: '#6B7280'}}>
               见证每一次美丽蜕变
             </p>
+            <button
+              onClick={() => navigate('/booking')}
+              className="px-10 py-3 text-white text-sm transition tracking-wider"
+              style={{backgroundColor: '#1C2B3A'}}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#101D29'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1C2B3A'}
+            >
+              预约咨询
+            </button>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className="flex flex-wrap justify-center gap-4 mb-16">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className="px-6 py-2 text-sm transition-all duration-300"
+                className="px-6 py-2 text-sm transition-all duration-300 border"
                 style={{
-                  color: selectedCategory === category ? 'white' : '#6B7280',
-                  backgroundColor: selectedCategory === category ? '#1C2B3A' : 'transparent',
-                  border: selectedCategory === category ? 'none' : '1px solid #D1D5DB'
+                  color: selectedCategory === category ? 'white' : '#1F1F1F',
+                  backgroundColor: selectedCategory === category ? '#1C2B3A' : 'white',
+                  borderColor: selectedCategory === category ? '#1C2B3A' : '#E5E7EB'
                 }}
                 onMouseEnter={(e) => {
                   if (selectedCategory !== category) {
                     e.currentTarget.style.borderColor = '#1C2B3A';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (selectedCategory !== category) {
-                    e.currentTarget.style.borderColor = '#D1D5DB';
+                    e.currentTarget.style.borderColor = '#E5E7EB';
+                    e.currentTarget.style.transform = 'translateY(0)';
                   }
                 }}
               >
@@ -111,64 +122,67 @@ function CasesPage() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredCases.map((caseStudy) => (
-                <div
-                  key={caseStudy.id}
-                  className="bg-white shadow-lg overflow-hidden transition-all duration-300 hover:shadow-2xl"
-                  style={{border: '1px solid #E5E7EB'}}
-                >
-                  <div className="aspect-[4/3]">
-                    <ImageCompareSlider
-                      beforeLabel="术前"
-                      afterLabel="术后"
-                      initialPosition={50}
-                    />
-                  </div>
-
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="text-lg font-normal" style={{color: '#1F1F1F'}}>
-                        {caseStudy.title}
-                      </h3>
-                      <span
-                        className="text-xs px-3 py-1"
-                        style={{
-                          backgroundColor: '#F3F4F6',
-                          color: '#6B7280'
-                        }}
-                      >
-                        {caseStudy.category}
-                      </span>
+            <div className="space-y-16">
+              {filteredCases.map((caseStudy, index) => (
+                <div key={caseStudy.id} className="bg-white border" style={{borderColor: '#E5E7EB'}}>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                    <div className="p-6 md:p-8 min-h-[500px] md:min-h-[600px] flex items-center">
+                      <ImageCompareSlider
+                        beforeImage={caseStudy.before_image_url}
+                        afterImage={caseStudy.after_image_url}
+                        altBefore={`${caseStudy.title} - 术前`}
+                        altAfter={`${caseStudy.title} - 术后`}
+                      />
                     </div>
 
-                    <p className="text-sm mb-4 leading-relaxed" style={{color: '#6B7280'}}>
-                      {caseStudy.description}
-                    </p>
-
-                    {caseStudy.duration && (
-                      <div className="mb-4 pb-4 border-b" style={{borderColor: '#E5E7EB'}}>
-                        <span className="text-xs" style={{color: '#6B7280'}}>
-                          恢复时间：{caseStudy.duration}
+                    <div className="p-6 md:p-8 flex flex-col justify-center">
+                      <div className="mb-4">
+                        <span
+                          className="inline-block px-4 py-1 text-xs font-light tracking-wider"
+                          style={{backgroundColor: '#1C2B3A', color: 'white'}}
+                        >
+                          {caseStudy.category}
                         </span>
                       </div>
-                    )}
+                      <h3 className="text-xl md:text-2xl font-light mb-4" style={{color: '#1F1F1F'}}>
+                        案例 {String(index + 1).padStart(2, '0')}
+                      </h3>
+                      <h4 className="text-lg md:text-xl font-normal mb-4" style={{color: '#1F1F1F'}}>
+                        {caseStudy.title}
+                      </h4>
+                      <p className="text-sm md:text-base leading-relaxed mb-6" style={{color: '#6B7280'}}>
+                        {caseStudy.description}
+                      </p>
 
-                    {caseStudy.features && caseStudy.features.length > 0 && (
-                      <div className="space-y-2">
-                        <p className="text-xs font-medium mb-2" style={{color: '#1F1F1F'}}>
-                          主要改善：
-                        </p>
-                        {caseStudy.features.map((feature, index) => (
-                          <div key={index} className="flex items-start gap-2">
-                            <span className="text-xs mt-0.5" style={{color: '#1C2B3A'}}>•</span>
-                            <span className="text-xs leading-relaxed" style={{color: '#6B7280'}}>
-                              {feature}
-                            </span>
+                      {caseStudy.duration && (
+                        <div className="mb-6 pb-6 border-b" style={{borderColor: '#E5E7EB'}}>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-normal" style={{color: '#1F1F1F'}}>恢复时间：</span>
+                            <span className="text-sm" style={{color: '#6B7280'}}>{caseStudy.duration}</span>
                           </div>
-                        ))}
-                      </div>
-                    )}
+                        </div>
+                      )}
+
+                      {caseStudy.features && caseStudy.features.length > 0 && (
+                        <div>
+                          <p className="text-sm font-normal mb-4" style={{color: '#1F1F1F'}}>
+                            主要改善效果
+                          </p>
+                          <div className="grid grid-cols-1 gap-3">
+                            {caseStudy.features.map((feature, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-start gap-3 p-3 bg-gray-50 border"
+                                style={{borderColor: '#E5E7EB'}}
+                              >
+                                <span className="mt-1 text-sm" style={{color: '#1C2B3A'}}>●</span>
+                                <span className="text-sm" style={{color: '#4B5563'}}>{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
