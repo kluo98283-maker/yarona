@@ -8,13 +8,10 @@ import CTASection from './CTASection';
 
 function FacialContourPage() {
   const navigate = useNavigate();
-  const [activeFeature, setActiveFeature] = useState<'nose' | 'eyes' | 'lips' | 'eyebrows' | 'ears'>('nose');
+  const [activeFeature, setActiveFeature] = useState<'nose' | 'eyes' | 'lips'>('nose');
 
   const noseTypes = [
-    { id: 1, name: '直鼻', description: '气质干练', image: '🖼️' },
-    { id: 2, name: '微翘鼻', description: '柔和甜美', image: '🖼️' },
-    { id: 3, name: '盒鼻', description: '混血立体', image: '🖼️' },
-    { id: 4, name: '水滴鼻', description: '自然圆润', image: '🖼️' },
+    { id: 1, name: '微翘鼻', description: '柔和甜美', image: '/micro_upturned_nose/b2b5b16dac1c3a8548d76a8e65d9cf2c.png' },
   ];
 
   const eyeTypes = [
@@ -28,24 +25,11 @@ function FacialContourPage() {
     { id: 2, name: '微笑唇', description: '亲和友善', image: '/mouth_facial_features/Gemini_Generated_Image_b6lk02b6lk02b6lk.png' },
   ];
 
-  const eyebrowTypes = [
-    { id: 1, name: '欧式挑眉', description: '高级精致', image: '🖼️' },
-    { id: 2, name: '平直眉', description: '温柔大气', image: '🖼️' },
-    { id: 3, name: '弯月眉', description: '柔和优雅', image: '🖼️' },
-  ];
-
-  const earTypes = [
-    { id: 1, name: '贴发耳', description: '精灵耳矫正', image: '🖼️' },
-    { id: 2, name: '正常耳廓', description: '杯状耳矫正', image: '🖼️' },
-  ];
-
   const getCurrentTypes = () => {
     switch (activeFeature) {
       case 'nose': return noseTypes;
       case 'eyes': return eyeTypes;
       case 'lips': return lipTypes;
-      case 'eyebrows': return eyebrowTypes;
-      case 'ears': return earTypes;
       default: return noseTypes;
     }
   };
@@ -319,8 +303,6 @@ function FacialContourPage() {
               { key: 'nose' as const, label: '鼻子' },
               { key: 'eyes' as const, label: '眼睛' },
               { key: 'lips' as const, label: '嘴巴' },
-              { key: 'eyebrows' as const, label: '眉毛' },
-              { key: 'ears' as const, label: '耳朵' },
             ].map((feature) => (
               <button
                 key={feature.key}
@@ -377,16 +359,6 @@ function FacialContourPage() {
                     style={{backgroundColor: '#F9FAFB'}}
                   >
                     {type.image}
-                  </div>
-                )}
-                {activeFeature !== 'eyes' && activeFeature !== 'lips' && (
-                  <div className="p-6 text-center">
-                    <h3 className="text-base md:text-lg font-normal mb-2" style={{color: '#1F1F1F'}}>
-                      {type.name}
-                    </h3>
-                    <p className="text-xs md:text-sm font-light" style={{color: '#6B7280'}}>
-                      {type.description}
-                    </p>
                   </div>
                 )}
               </div>
