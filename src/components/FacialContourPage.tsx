@@ -372,14 +372,6 @@ function FacialContourPage() {
                     {type.image}
                   </div>
                 )}
-                <div className="text-center p-6">
-                  <h3 className="text-base md:text-lg font-normal mb-2" style={{color: '#1F1F1F'}}>
-                    {type.name}
-                  </h3>
-                  <p className="text-xs md:text-sm font-light" style={{color: '#6B7280'}}>
-                    {type.description}
-                  </p>
-                </div>
               </div>
             ))}
           </div>
