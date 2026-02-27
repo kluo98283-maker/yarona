@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import ImageCompareSlider from './ImageCompareSlider';
 import CTASection from './CTASection';
 import Footer from './Footer';
@@ -10,6 +11,7 @@ function BodySculptingPage() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeService, setActiveService] = useState<'waist' | 'breast' | 'liposuction' | 'abdomen' | 'buttocks' | 'thigh'>('waist');
+  const [caseStudies, setCaseStudies] = useState<any[]>([]);
 
   const images = [
     '/Gemini_Generated_Image_94iwds94iwds94iw.png',
@@ -125,24 +127,37 @@ function BodySculptingPage() {
     }
   };
 
-  const caseStudies = [
-    {
-      id: 1,
-      title: '直角腰塑形案例',
-      category: '腰部塑形',
-      beforeImage: '/Gemini_Generated_Image_94iwds94iwds94iw.png',
-      afterImage: '/Gemini_Generated_Image_iubeodiubeodiube.png',
-      description: '通过精准吸脂技术，成功打造完美直角腰线，腰臀比例达到理想状态。'
-    },
-    {
-      id: 2,
-      title: '隆胸手术案例',
-      category: '胸部塑形',
-      beforeImage: '/Gemini_Generated_Image_u1lac1u1lac1u1la.png',
-      afterImage: '/Gemini_Generated_Image_94iwds94iwds94iw.png',
-      description: '采用假体隆胸技术，塑造自然饱满的胸型，提升整体身材比例。'
-    }
-  ];
+  useEffect(() => {
+    const fetchFeaturedCases = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('detailed_cases')
+          .select('*')
+          .eq('category', 'body_sculpting')
+          .eq('is_featured', true)
+          .eq('is_active', true)
+          .order('display_order', { ascending: true })
+          .limit(2);
+
+        if (error) throw error;
+
+        const formattedCases = (data || []).map(item => ({
+          id: item.id,
+          title: item.surgery_name,
+          category: '身体塑形',
+          beforeImage: item.before_image_url,
+          afterImage: item.after_image_url,
+          description: item.after_features.map((f: any) => f.feature).join('，')
+        }));
+
+        setCaseStudies(formattedCases);
+      } catch (error) {
+        console.error('Error fetching featured cases:', error);
+      }
+    };
+
+    fetchFeaturedCases();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">

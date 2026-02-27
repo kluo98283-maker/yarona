@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ImageCompareSlider from './ImageCompareSlider';
@@ -9,6 +10,7 @@ import CTASection from './CTASection';
 function FacialContourPage() {
   const navigate = useNavigate();
   const [activeFeature, setActiveFeature] = useState<'nose' | 'eyes' | 'lips'>('nose');
+  const [caseStudies, setCaseStudies] = useState<any[]>([]);
 
   const noseTypes = [
     { id: 1, name: '微翘鼻', description: '柔和甜美', image: '/micro_upturned_nose/b2b5b16dac1c3a8548d76a8e65d9cf2c.png' },
@@ -34,24 +36,37 @@ function FacialContourPage() {
     }
   };
 
-  const caseStudies = [
-    {
-      id: 1,
-      title: '面部轮廓综合手术',
-      category: '面部塑形',
-      beforeImage: '/540f310b1f9b5244da98c950465274f4.png',
-      afterImage: '/7f2a85b5a678c2f472ee7c56c64a6039.png',
-      description: '利用颧骨内推和颏成型术式改善面部轮廓流畅度，打造柔和的面部线条，整体提升面部比例与美感。'
-    },
-    {
-      id: 2,
-      title: '五官精雕手术',
-      category: '五官塑形',
-      beforeImage: '/540f310b1f9b5244da98c950465274f4_copy.png',
-      afterImage: '/7f2a85b5a678c2f472ee7c56c64a6039_copy.png',
-      description: '综合鼻综合和双眼皮手术，提升五官精致度与面部协调性，塑造立体自然的五官轮廓。'
-    }
-  ];
+  useEffect(() => {
+    const fetchFeaturedCases = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('detailed_cases')
+          .select('*')
+          .eq('category', 'facial_contour')
+          .eq('is_featured', true)
+          .eq('is_active', true)
+          .order('display_order', { ascending: true })
+          .limit(2);
+
+        if (error) throw error;
+
+        const formattedCases = (data || []).map(item => ({
+          id: item.id,
+          title: item.surgery_name,
+          category: '面部塑形',
+          beforeImage: item.before_image_url,
+          afterImage: item.after_image_url,
+          description: item.after_features.map((f: any) => f.feature).join('，')
+        }));
+
+        setCaseStudies(formattedCases);
+      } catch (error) {
+        console.error('Error fetching featured cases:', error);
+      }
+    };
+
+    fetchFeaturedCases();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">

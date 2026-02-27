@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { LogOut, Calendar, Image, Users } from 'lucide-react';
+import { LogOut, Calendar, Image, Users, ImagePlus } from 'lucide-react';
 import BookingManagement from './BookingManagement';
 import CaseStudyManagement from './CaseStudyManagement';
+import SimpleCaseManagement from './SimpleCaseManagement';
+import DetailedCaseManagement from './DetailedCaseManagement';
 
 interface Admin {
   id: string;
@@ -11,7 +13,7 @@ interface Admin {
   role: string;
 }
 
-type TabType = 'bookings' | 'cases' | 'customers';
+type TabType = 'bookings' | 'cases' | 'simple-cases' | 'detailed-cases' | 'customers';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ function AdminDashboard() {
       const { data: adminData, error } = await supabase
         .from('admins')
         .select('*')
-        .eq('id', user.id)
+        .eq('user_id', user.id)
         .eq('is_active', true)
         .maybeSingle();
 
@@ -105,6 +107,28 @@ function AdminDashboard() {
             </button>
 
             <button
+              onClick={() => setActiveTab('simple-cases')}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition ${
+                activeTab === 'simple-cases' ? 'bg-white shadow-sm' : ''
+              }`}
+              style={{color: activeTab === 'simple-cases' ? '#1F1F1F' : '#6B7280'}}
+            >
+              <Image className="w-5 h-5" />
+              简单案例
+            </button>
+
+            <button
+              onClick={() => setActiveTab('detailed-cases')}
+              className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition ${
+                activeTab === 'detailed-cases' ? 'bg-white shadow-sm' : ''
+              }`}
+              style={{color: activeTab === 'detailed-cases' ? '#1F1F1F' : '#6B7280'}}
+            >
+              <ImagePlus className="w-5 h-5" />
+              详细案例
+            </button>
+
+            <button
               onClick={() => setActiveTab('cases')}
               className={`w-full flex items-center gap-3 px-4 py-3 text-sm transition ${
                 activeTab === 'cases' ? 'bg-white shadow-sm' : ''
@@ -112,7 +136,7 @@ function AdminDashboard() {
               style={{color: activeTab === 'cases' ? '#1F1F1F' : '#6B7280'}}
             >
               <Image className="w-5 h-5" />
-              案例管理
+              旧案例管理
             </button>
 
             <button
@@ -130,6 +154,8 @@ function AdminDashboard() {
 
         <main className="flex-1 p-8">
           {activeTab === 'bookings' && <BookingManagement />}
+          {activeTab === 'simple-cases' && <SimpleCaseManagement />}
+          {activeTab === 'detailed-cases' && <DetailedCaseManagement />}
           {activeTab === 'cases' && <CaseStudyManagement />}
           {activeTab === 'customers' && (
             <div className="text-center py-12">

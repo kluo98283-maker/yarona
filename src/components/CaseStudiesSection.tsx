@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 
-interface CaseStudy {
+interface SimpleCase {
   id: string;
-  title: string;
   before_image_url: string;
   after_image_url: string;
-  category: string;
 }
 
 function CaseStudiesSection() {
-  const [cases, setCases] = useState<CaseStudy[]>([]);
+  const [cases, setCases] = useState<SimpleCase[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,8 +18,8 @@ function CaseStudiesSection() {
   const fetchCases = async () => {
     try {
       const { data, error } = await supabase
-        .from('case_studies')
-        .select('id, title, before_image_url, after_image_url, category')
+        .from('simple_cases')
+        .select('id, before_image_url, after_image_url')
         .eq('is_active', true)
         .order('display_order', { ascending: true })
         .limit(8);
@@ -29,7 +27,7 @@ function CaseStudiesSection() {
       if (error) throw error;
       setCases(data || []);
     } catch (error) {
-      console.error('Error fetching case studies:', error);
+      console.error('Error fetching simple cases:', error);
     } finally {
       setLoading(false);
     }
@@ -99,33 +97,29 @@ function CaseStudiesSection() {
         <div className="space-y-2 md:space-y-3">
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className="grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-3">
-              {row.map((caseStudy) => (
-                <div key={caseStudy.id} className="md:col-span-2 border-4 border-blue-500">
+              {row.map((caseItem) => (
+                <div key={caseItem.id} className="md:col-span-2">
                   <div className="grid grid-cols-2 gap-0">
-                    <div className="aspect-[4/5] overflow-hidden relative group border-2 border-red-500">
+                    <div className="aspect-[4/5] overflow-hidden relative group">
                       <img
-                        src={caseStudy.before_image_url}
-                        alt={`${caseStudy.title} - 术前`}
+                        src={caseItem.before_image_url}
+                        alt="术前"
                         className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                       />
                       <div className="absolute bottom-2 md:bottom-3 left-2 md:left-3 bg-black bg-opacity-50 px-2 py-1">
                         <span className="text-xs text-white">术前</span>
                       </div>
                     </div>
-                    <div className="aspect-[4/5] overflow-hidden relative group border-2 border-red-500">
+                    <div className="aspect-[4/5] overflow-hidden relative group">
                       <img
-                        src={caseStudy.after_image_url}
-                        alt={`${caseStudy.title} - 术后`}
+                        src={caseItem.after_image_url}
+                        alt="术后"
                         className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
                       />
                       <div className="absolute bottom-2 md:bottom-3 left-2 md:left-3 bg-black bg-opacity-50 px-2 py-1">
                         <span className="text-xs text-white">术后</span>
                       </div>
                     </div>
-                  </div>
-                  <div className="p-2 md:p-4 bg-white border-t" style={{borderColor: '#E5E7EB'}}>
-                    <h3 className="text-xs md:text-sm font-normal" style={{color: '#1F1F1F'}}>{caseStudy.title}</h3>
-                    <p className="text-xs mt-1" style={{color: '#6B7280'}}>{caseStudy.category}</p>
                   </div>
                 </div>
               ))}

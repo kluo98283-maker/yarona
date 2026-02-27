@@ -6,25 +6,41 @@ import Footer from './Footer';
 import ImageCompareSlider from './ImageCompareSlider';
 import CTASection from './CTASection';
 
-interface CaseStudy {
+interface DetailedCase {
   id: string;
-  title: string;
+  surgery_name: string;
   category: string;
-  description: string;
   before_image_url: string;
   after_image_url: string;
-  duration: string;
-  features: string[];
+  before_features: Array<{ feature: string }>;
+  after_features: Array<{ feature: string }>;
+  is_featured: boolean;
   created_at: string;
 }
 
+const categoryMap: Record<string, string> = {
+  'facial_contour': '面部轮廓',
+  'body_sculpting': '身体塑形',
+  'injection_lifting': '注射提升',
+  'dental': '牙科美容',
+  'hair_transplant': '植发'
+};
+
+const categoryMapReverse: Record<string, string> = {
+  '面部轮廓': 'facial_contour',
+  '身体塑形': 'body_sculpting',
+  '注射提升': 'injection_lifting',
+  '牙科美容': 'dental',
+  '植发': 'hair_transplant'
+};
+
 function CasesPage() {
   const navigate = useNavigate();
-  const [cases, setCases] = useState<CaseStudy[]>([]);
+  const [cases, setCases] = useState<DetailedCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('全部');
 
-  const categories = ['全部', '面部轮廓', '身体塑形', '注射提升', '植发', '牙齿美容'];
+  const categories = ['全部', '面部轮廓', '身体塑形', '注射提升', '植发', '牙科美容'];
 
   useEffect(() => {
     loadCases();
@@ -33,9 +49,10 @@ function CasesPage() {
   const loadCases = async () => {
     try {
       const { data, error } = await supabase
-        .from('case_studies')
+        .from('detailed_cases')
         .select('*')
-        .order('created_at', { ascending: false });
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
 
       if (error) throw error;
       setCases(data || []);
@@ -48,7 +65,7 @@ function CasesPage() {
 
   const filteredCases = selectedCategory === '全部'
     ? cases
-    : cases.filter(c => c.category === selectedCategory);
+    : cases.filter(c => c.category === categoryMapReverse[selectedCategory]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -123,15 +140,15 @@ function CasesPage() {
             </div>
           ) : (
             <div className="space-y-16">
-              {filteredCases.map((caseStudy, index) => (
-                <div key={caseStudy.id} className="bg-white border" style={{borderColor: '#E5E7EB'}}>
+              {filteredCases.map((caseItem, index) => (
+                <div key={caseItem.id} className="bg-white border" style={{borderColor: '#E5E7EB'}}>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
                     <div className="p-6 md:p-8 min-h-[500px] md:min-h-[600px] flex items-center">
                       <ImageCompareSlider
-                        beforeImage={caseStudy.before_image_url}
-                        afterImage={caseStudy.after_image_url}
-                        altBefore={`${caseStudy.title} - 术前`}
-                        altAfter={`${caseStudy.title} - 术后`}
+                        beforeImage={caseItem.before_image_url}
+                        afterImage={caseItem.after_image_url}
+                        altBefore={`${caseItem.surgery_name} - 术前`}
+                        altAfter={`${caseItem.surgery_name} - 术后`}
                       />
                     </div>
 
@@ -141,45 +158,46 @@ function CasesPage() {
                           className="inline-block px-4 py-1 text-xs font-light tracking-wider"
                           style={{backgroundColor: '#1C2B3A', color: 'white'}}
                         >
-                          {caseStudy.category}
+                          {categoryMap[caseItem.category]}
                         </span>
                       </div>
                       <h3 className="text-xl md:text-2xl font-light mb-4" style={{color: '#1F1F1F'}}>
                         案例 {String(index + 1).padStart(2, '0')}
                       </h3>
-                      <h4 className="text-lg md:text-xl font-normal mb-4" style={{color: '#1F1F1F'}}>
-                        {caseStudy.title}
+                      <h4 className="text-lg md:text-xl font-normal mb-6" style={{color: '#1F1F1F'}}>
+                        {caseItem.surgery_name}
                       </h4>
-                      <p className="text-sm md:text-base leading-relaxed mb-6" style={{color: '#6B7280'}}>
-                        {caseStudy.description}
-                      </p>
 
-                      {caseStudy.duration && (
-                        <div className="mb-6 pb-6 border-b" style={{borderColor: '#E5E7EB'}}>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-normal" style={{color: '#1F1F1F'}}>恢复时间：</span>
-                            <span className="text-sm" style={{color: '#6B7280'}}>{caseStudy.duration}</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {caseStudy.features && caseStudy.features.length > 0 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                          <p className="text-sm font-normal mb-4" style={{color: '#1F1F1F'}}>
-                            主要改善效果
-                          </p>
-                          <div className="grid grid-cols-1 gap-3">
-                            {caseStudy.features.map((feature, idx) => (
-                              <div
-                                key={idx}
-                                className="flex items-start gap-3 p-3 bg-gray-50 border"
-                                style={{borderColor: '#E5E7EB'}}
-                              >
-                                <span className="mt-1 text-sm" style={{color: '#1C2B3A'}}>●</span>
-                                <span className="text-sm" style={{color: '#4B5563'}}>{feature}</span>
-                              </div>
+                          <p className="text-sm font-medium mb-3" style={{color: '#1F1F1F'}}>术前特征</p>
+                          <ul className="space-y-2">
+                            {caseItem.before_features.map((f, i) => (
+                              <li key={i} className="flex items-start gap-2 text-sm" style={{color: '#6B7280'}}>
+                                <span className="mt-1">•</span>
+                                <span>{f.feature}</span>
+                              </li>
                             ))}
-                          </div>
+                          </ul>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium mb-3" style={{color: '#1F1F1F'}}>术后特征</p>
+                          <ul className="space-y-2">
+                            {caseItem.after_features.map((f, i) => (
+                              <li key={i} className="flex items-start gap-2 text-sm" style={{color: '#6B7280'}}>
+                                <span className="mt-1">•</span>
+                                <span>{f.feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      {caseItem.is_featured && (
+                        <div className="mt-4">
+                          <span className="inline-block px-3 py-1 text-xs" style={{backgroundColor: '#FEF3C7', color: '#92400E'}}>
+                            精选案例
+                          </span>
                         </div>
                       )}
                     </div>
