@@ -18,9 +18,9 @@ function FacialContourPage() {
   ];
 
   const eyeTypes = [
-    { id: 1, name: '开扇双眼皮', description: '妩媚动人', image: '🖼️' },
-    { id: 2, name: '平行双眼皮', description: '清纯自然', image: '🖼️' },
-    { id: 3, name: '新月型', description: '甜美温柔', image: '🖼️' },
+    { id: 1, name: '开扇双眼皮', description: '妩媚动人', image: '/e7e3dea04d581a82271b810ab7b33eab.jpg' },
+    { id: 2, name: '平行双眼皮', description: '清纯自然', image: '/5ceb11519ac27ce1cd3ec0b5b6612e9d.jpg' },
+    { id: 3, name: '新月型', description: '甜美温柔', image: '/e10862d0ad29bb40d6ffda2f5782db49.jpg' },
   ];
 
   const lipTypes = [
@@ -349,11 +349,11 @@ function FacialContourPage() {
           </div>
 
           {/* Feature Types Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {getCurrentTypes().map((type) => (
               <div
                 key={type.id}
-                className="bg-white border transition-all duration-300"
+                className="bg-white border transition-all duration-300 overflow-hidden"
                 style={{borderColor: '#E5E7EB'}}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'scale(1.02)';
@@ -364,20 +364,32 @@ function FacialContourPage() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <div
-                  className="aspect-square flex items-center justify-center text-6xl"
-                  style={{backgroundColor: '#F9FAFB'}}
-                >
-                  {type.image}
-                </div>
-                <div className="p-6 text-center">
-                  <h3 className="text-base md:text-lg font-normal mb-2" style={{color: '#1F1F1F'}}>
-                    {type.name}
-                  </h3>
-                  <p className="text-xs md:text-sm font-light" style={{color: '#6B7280'}}>
-                    {type.description}
-                  </p>
-                </div>
+                {typeof type.image === 'string' && type.image.startsWith('/') ? (
+                  <div className="w-full aspect-[4/3] overflow-hidden">
+                    <img
+                      src={type.image}
+                      alt={type.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="aspect-square flex items-center justify-center text-6xl"
+                    style={{backgroundColor: '#F9FAFB'}}
+                  >
+                    {type.image}
+                  </div>
+                )}
+                {activeFeature !== 'eyes' && (
+                  <div className="p-6 text-center">
+                    <h3 className="text-base md:text-lg font-normal mb-2" style={{color: '#1F1F1F'}}>
+                      {type.name}
+                    </h3>
+                    <p className="text-xs md:text-sm font-light" style={{color: '#6B7280'}}>
+                      {type.description}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
