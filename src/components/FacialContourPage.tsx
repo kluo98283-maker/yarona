@@ -24,9 +24,8 @@ function FacialContourPage() {
   ];
 
   const lipTypes = [
-    { id: 1, name: 'M唇', description: '性感迷人', image: '🖼️' },
-    { id: 2, name: '微笑唇', description: '亲和友善', image: '🖼️' },
-    { id: 3, name: '饱满丰唇', description: '丰盈立体', image: '🖼️' },
+    { id: 1, name: 'M唇', description: '性感迷人', image: '/mouth_facial_features/Gemini_Generated_Image_wo4l20wo4l20wo4l_(1).png' },
+    { id: 2, name: '微笑唇', description: '亲和友善', image: '/mouth_facial_features/Gemini_Generated_Image_b6lk02b6lk02b6lk.png' },
   ];
 
   const eyebrowTypes = [
@@ -380,7 +379,7 @@ function FacialContourPage() {
                     {type.image}
                   </div>
                 )}
-                {activeFeature !== 'eyes' && (
+                {activeFeature !== 'eyes' && activeFeature !== 'lips' && (
                   <div className="p-6 text-center">
                     <h3 className="text-base md:text-lg font-normal mb-2" style={{color: '#1F1F1F'}}>
                       {type.name}
