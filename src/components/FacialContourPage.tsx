@@ -14,6 +14,7 @@ function FacialContourPage() {
 
   const noseTypes = [
     { id: 1, name: '微翘鼻', description: '柔和甜美', image: '/micro_upturned_nose/b2b5b16dac1c3a8548d76a8e65d9cf2c.png' },
+    { id: 2, name: '精致鼻型', description: '立体优雅', image: '/facial_contour/facial_features_refinement/nose/cf501e8337c6c7f69a7dcca699ac2169_nose_refinement.jpg' },
   ];
 
   const eyeTypes = [
@@ -371,6 +372,14 @@ function FacialContourPage() {
                     {type.image}
                   </div>
                 )}
+                <div className="text-center p-6">
+                  <h3 className="text-base md:text-lg font-normal mb-2" style={{color: '#1F1F1F'}}>
+                    {type.name}
+                  </h3>
+                  <p className="text-xs md:text-sm font-light" style={{color: '#6B7280'}}>
+                    {type.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
