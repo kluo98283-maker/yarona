@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Lock } from 'lucide-react';
 import Navbar from './Navbar';
 
@@ -17,30 +17,8 @@ function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (authError) throw authError;
-
-      if (authData.user) {
-        const { data: adminData, error: adminError } = await supabase
-          .from('admins')
-          .select('*')
-          .eq('id', authData.user.id)
-          .eq('is_active', true)
-          .maybeSingle();
-
-        if (adminError) throw adminError;
-
-        if (!adminData) {
-          await supabase.auth.signOut();
-          throw new Error('您没有管理员权限');
-        }
-
-        navigate('/admin/dashboard');
-      }
+      await api.adminLogin(email, password);
+      navigate('/admin/dashboard');
     } catch (err: any) {
       setError(err.message || '登录失败，请检查您的凭据');
     } finally {

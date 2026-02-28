@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Upload, Trash2, Edit, Save, X } from 'lucide-react';
 
 interface CaseStudy {
@@ -46,12 +46,7 @@ function CaseStudyManagement() {
   const fetchCases = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('case_studies')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-      if (error) throw error;
+      const data = await api.getDetailedCases();
       setCases(data || []);
     } catch (error) {
       console.error('Error fetching cases:', error);
@@ -65,18 +60,9 @@ function CaseStudyManagement() {
 
     try {
       if (editingId) {
-        const { error } = await supabase
-          .from('case_studies')
-          .update({ ...formData, updated_at: new Date().toISOString() })
-          .eq('id', editingId);
-
-        if (error) throw error;
+        await api.updateDetailedCase(editingId, { ...formData, updated_at: new Date().toISOString() });
       } else {
-        const { error } = await supabase
-          .from('case_studies')
-          .insert([formData]);
-
-        if (error) throw error;
+        await api.createDetailedCase(formData);
       }
 
       resetForm();
@@ -105,12 +91,7 @@ function CaseStudyManagement() {
     if (!confirm('确定要删除这个案例吗？')) return;
 
     try {
-      const { error } = await supabase
-        .from('case_studies')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.deleteDetailedCase(id);
       fetchCases();
     } catch (error) {
       console.error('Error deleting case:', error);
@@ -120,12 +101,7 @@ function CaseStudyManagement() {
 
   const toggleActive = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase
-        .from('case_studies')
-        .update({ is_active: !currentStatus, updated_at: new Date().toISOString() })
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.updateDetailedCase(id, { is_active: !currentStatus, updated_at: new Date().toISOString() });
       fetchCases();
     } catch (error) {
       console.error('Error toggling status:', error);

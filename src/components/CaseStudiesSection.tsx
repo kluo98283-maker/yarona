@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 
 interface SimpleCase {
   id: string;
@@ -17,15 +17,8 @@ function CaseStudiesSection() {
 
   const fetchCases = async () => {
     try {
-      const { data, error } = await supabase
-        .from('simple_cases')
-        .select('id, before_image_url, after_image_url')
-        .eq('is_active', true)
-        .order('display_order', { ascending: true })
-        .limit(8);
-
-      if (error) throw error;
-      setCases(data || []);
+      const data = await api.getSimpleCases();
+      setCases(data.slice(0, 8) || []);
     } catch (error) {
       console.error('Error fetching simple cases:', error);
     } finally {

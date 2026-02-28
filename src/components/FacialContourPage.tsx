@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ImageCompareSlider from './ImageCompareSlider';
@@ -40,18 +40,12 @@ function FacialContourPage() {
   useEffect(() => {
     const fetchFeaturedCases = async () => {
       try {
-        const { data, error } = await supabase
-          .from('detailed_cases')
-          .select('*')
-          .eq('category', 'facial_contour')
-          .eq('is_featured', true)
-          .eq('is_active', true)
-          .order('display_order', { ascending: true })
-          .limit(2);
+        const data = await api.getDetailedCases('facial_contour');
+        const featuredCases = data
+          .filter((item: any) => item.is_featured && item.is_active)
+          .slice(0, 2);
 
-        if (error) throw error;
-
-        const formattedCases = (data || []).map(item => ({
+        const formattedCases = featuredCases.map(item => ({
           id: item.id,
           title: item.surgery_name,
           category: '面部塑形',

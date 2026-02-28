@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { supabase } from './lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { api } from './lib/api';
 import { LogOut, User as UserIcon, Menu, X } from 'lucide-react';
 import ImageCompareSlider from './components/ImageCompareSlider';
 import CaseStudiesSection from './components/CaseStudiesSection';
@@ -9,6 +8,12 @@ import ServicesSection from './components/ServicesSection';
 import MobileTestimonialCarousel from './components/MobileTestimonialCarousel';
 import LanguageSelector from './components/LanguageSelector';
 import { useLanguage } from './contexts/LanguageContext';
+
+interface User {
+  id: string;
+  email: string;
+  avatar_url?: string | null;
+}
 
 interface Profile {
   avatar_url: string | null;
@@ -27,41 +32,29 @@ function App() {
   const [expandedEthnicity, setExpandedEthnicity] = useState<string | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        loadProfile(session.user.id);
-      }
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        loadProfile(session.user.id);
-      } else {
-        setProfile(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    loadUser();
   }, []);
 
-  const loadProfile = async (userId: string) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('avatar_url, email')
-      .eq('id', userId)
-      .maybeSingle();
-
-    if (data) {
-      setProfile(data);
+  const loadUser = async () => {
+    try {
+      const { user: currentUser } = await api.getCurrentUser();
+      setUser(currentUser);
+      if (currentUser) {
+        setProfile({
+          avatar_url: currentUser.avatar_url || null,
+          email: currentUser.email
+        });
+      }
+    } catch (error) {
+      setUser(null);
+      setProfile(null);
     }
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await api.logout();
+    setUser(null);
+    setProfile(null);
     setShowUserMenu(false);
     navigate('/');
   };

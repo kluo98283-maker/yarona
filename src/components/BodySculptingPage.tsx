@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import ImageCompareSlider from './ImageCompareSlider';
 import CTASection from './CTASection';
 import Footer from './Footer';
@@ -130,18 +130,12 @@ function BodySculptingPage() {
   useEffect(() => {
     const fetchFeaturedCases = async () => {
       try {
-        const { data, error } = await supabase
-          .from('detailed_cases')
-          .select('*')
-          .eq('category', 'body_sculpting')
-          .eq('is_featured', true)
-          .eq('is_active', true)
-          .order('display_order', { ascending: true })
-          .limit(2);
+        const data = await api.getDetailedCases('body_sculpting');
+        const featuredCases = data
+          .filter((item: any) => item.is_featured && item.is_active)
+          .slice(0, 2);
 
-        if (error) throw error;
-
-        const formattedCases = (data || []).map(item => ({
+        const formattedCases = featuredCases.map(item => ({
           id: item.id,
           title: item.surgery_name,
           category: '身体塑形',

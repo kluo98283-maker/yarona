@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Navbar from './Navbar';
 
@@ -18,16 +18,8 @@ function LoginPage() {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-
-      if (data.user) {
-        navigate('/');
-      }
+      await api.login(email, password);
+      navigate('/');
     } catch (err: any) {
       setError(err.message || '登录失败，请检查您的邮箱和密码');
     } finally {

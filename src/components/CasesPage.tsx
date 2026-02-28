@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ImageCompareSlider from './ImageCompareSlider';
@@ -48,13 +48,7 @@ function CasesPage() {
 
   const loadCases = async () => {
     try {
-      const { data, error } = await supabase
-        .from('detailed_cases')
-        .select('*')
-        .eq('is_active', true)
-        .order('display_order', { ascending: true });
-
-      if (error) throw error;
+      const data = await api.getDetailedCases();
       setCases(data || []);
     } catch (error) {
       console.error('Error loading cases:', error);

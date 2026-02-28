@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Trash2, Plus, X } from 'lucide-react';
 
 interface SimpleCase {
@@ -28,12 +28,7 @@ export default function SimpleCaseManagement() {
 
   const fetchCases = async () => {
     try {
-      const { data, error } = await supabase
-        .from('simple_cases')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-      if (error) throw error;
+      const data = await api.getAllSimpleCases();
       setCases(data || []);
     } catch (error) {
       console.error('Error fetching cases:', error);
@@ -44,11 +39,7 @@ export default function SimpleCaseManagement() {
 
   const handleAddCase = async () => {
     try {
-      const { error } = await supabase
-        .from('simple_cases')
-        .insert([newCase]);
-
-      if (error) throw error;
+      await api.createSimpleCase(newCase);
 
       setShowAddModal(false);
       setNewCase({
@@ -68,12 +59,7 @@ export default function SimpleCaseManagement() {
     if (!confirm('确定要删除这个案例吗?')) return;
 
     try {
-      const { error } = await supabase
-        .from('simple_cases')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.deleteSimpleCase(id);
       fetchCases();
     } catch (error) {
       console.error('Error deleting case:', error);
@@ -83,12 +69,7 @@ export default function SimpleCaseManagement() {
 
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase
-        .from('simple_cases')
-        .update({ is_active: !currentStatus })
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.updateSimpleCase(id, { is_active: !currentStatus });
       fetchCases();
     } catch (error) {
       console.error('Error updating case:', error);

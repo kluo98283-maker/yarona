@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Trash2, Plus, X } from 'lucide-react';
 
 interface DetailedCase {
@@ -46,12 +46,7 @@ export default function DetailedCaseManagement() {
 
   const fetchCases = async () => {
     try {
-      const { data, error } = await supabase
-        .from('detailed_cases')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-      if (error) throw error;
+      const data = await api.getAllDetailedCases();
       setCases(data || []);
     } catch (error) {
       console.error('Error fetching cases:', error);
@@ -68,11 +63,7 @@ export default function DetailedCaseManagement() {
         after_features: newCase.after_features.filter(f => f.feature.trim() !== '')
       };
 
-      const { error } = await supabase
-        .from('detailed_cases')
-        .insert([caseData]);
-
-      if (error) throw error;
+      await api.createDetailedCase(caseData);
 
       setShowAddModal(false);
       setNewCase({
@@ -97,12 +88,7 @@ export default function DetailedCaseManagement() {
     if (!confirm('确定要删除这个案例吗?')) return;
 
     try {
-      const { error } = await supabase
-        .from('detailed_cases')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.deleteDetailedCase(id);
       fetchCases();
     } catch (error) {
       console.error('Error deleting case:', error);
@@ -112,12 +98,7 @@ export default function DetailedCaseManagement() {
 
   const handleToggleActive = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase
-        .from('detailed_cases')
-        .update({ is_active: !currentStatus })
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.updateDetailedCase(id, { is_active: !currentStatus });
       fetchCases();
     } catch (error) {
       console.error('Error updating case:', error);
@@ -127,12 +108,7 @@ export default function DetailedCaseManagement() {
 
   const handleToggleFeatured = async (id: string, currentStatus: boolean) => {
     try {
-      const { error } = await supabase
-        .from('detailed_cases')
-        .update({ is_featured: !currentStatus })
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.updateDetailedCase(id, { is_featured: !currentStatus });
       fetchCases();
     } catch (error) {
       console.error('Error updating case:', error);

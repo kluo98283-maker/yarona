@@ -1,9 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { api } from '../lib/api';
 import { LogOut, User as UserIcon, Menu, X } from 'lucide-react';
 import LanguageSelector from './LanguageSelector';
+
+interface User {
+  id: string;
+  email: string;
+  avatar_url?: string | null;
+}
 
 interface Profile {
   avatar_url: string | null;
@@ -20,43 +25,36 @@ function Navbar() {
   const [showMobileProjects, setShowMobileProjects] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        loadProfile(session.user.id);
-      }
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        loadProfile(session.user.id);
-      } else {
-        setProfile(null);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    loadUser();
   }, []);
 
-  const loadProfile = async (userId: string) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('avatar_url, email')
-      .eq('id', userId)
-      .maybeSingle();
-
-    if (data) {
-      setProfile(data);
+  const loadUser = async () => {
+    try {
+      const response = await api.getCurrentUser();
+      if (response.user) {
+        setUser(response.user);
+        setProfile({
+          avatar_url: response.user.avatar_url || null,
+          email: response.user.email
+        });
+      }
+    } catch (error) {
+      setUser(null);
+      setProfile(null);
     }
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setShowUserMenu(false);
-    navigate('/');
+    try {
+      await api.logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setUser(null);
+      setProfile(null);
+      setShowUserMenu(false);
+      navigate('/');
+    }
   };
 
   return (

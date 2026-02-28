@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import BookingDesktop from './booking/BookingDesktop';
 import BookingMobile from './booking/BookingMobile';
 
@@ -40,8 +40,6 @@ function BookingPage() {
     setLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-
       const fullName = formData.firstName && formData.lastName
         ? `${formData.lastName}${formData.firstName}`
         : formData.name;
@@ -54,26 +52,19 @@ function BookingPage() {
         preferred_time: null,
         service_type: formData.service_type,
         message: formData.message,
-        user_id: user?.id || null,
         status: 'pending',
         payment_status: 'pending',
         consultation_fee: 500
       };
 
-      const { data, error: insertError } = await supabase
-        .from('bookings')
-        .insert([bookingData])
-        .select()
-        .single();
+      const data = await api.createBooking(bookingData);
 
-      if (insertError) throw insertError;
-
-      if (data) {
+      if (data && data.id) {
         setBookingId(data.id);
+        setStep('payment');
       } else {
         throw new Error('预订创建成功，但无法获取预订ID');
       }
-      setStep('payment');
     } catch (err: any) {
       setError(err.message || '提交失败，请重试');
     } finally {
@@ -86,30 +77,7 @@ function BookingPage() {
     setError('');
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-
-      const paymentData = {
-        booking_id: bookingId,
-        user_id: user?.id || null,
-        amount: 500,
-        currency: 'CNY',
-        payment_method: method,
-        status: 'completed'
-      };
-
-      const { error: paymentError } = await supabase
-        .from('payments')
-        .insert([paymentData]);
-
-      if (paymentError) throw paymentError;
-
-      const { error: updateError } = await supabase
-        .from('bookings')
-        .update({ payment_status: 'paid' })
-        .eq('id', bookingId);
-
-      if (updateError) throw updateError;
-
+      await api.updateBooking(bookingId, { payment_status: 'paid' });
       setStep('success');
     } catch (err: any) {
       setError(err.message || '支付失败，请重试');

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Mail, Lock, Eye, EyeOff, Upload, User } from 'lucide-react';
 import Navbar from './Navbar';
 
@@ -75,51 +75,17 @@ function RegisterPage() {
     setLoading(true);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      await api.register(email, password);
 
-      if (authError) throw authError;
-
-      if (authData.user) {
-        let avatarUrl = null;
-
-        if (avatarFile) {
-          const fileExt = avatarFile.name.split('.').pop();
-          const fileName = `${authData.user.id}-${Date.now()}.${fileExt}`;
-          const filePath = `avatars/${fileName}`;
-
-          const { error: uploadError } = await supabase.storage
-            .from('avatars')
-            .upload(filePath, avatarFile);
-
-          if (uploadError) {
-            console.error('头像上传失败:', uploadError);
-          } else {
-            const { data: urlData } = supabase.storage
-              .from('avatars')
-              .getPublicUrl(filePath);
-            avatarUrl = urlData.publicUrl;
-          }
+      if (avatarFile) {
+        try {
+          await api.uploadImage(avatarFile);
+        } catch (uploadError) {
+          console.error('头像上传失败:', uploadError);
         }
-
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: authData.user.id,
-              email: email,
-              avatar_url: avatarUrl,
-            },
-          ]);
-
-        if (profileError) {
-          console.error('创建用户资料失败:', profileError);
-        }
-
-        navigate('/login');
       }
+
+      navigate('/login');
     } catch (err: any) {
       setError(err.message || '注册失败，请稍后再试');
     } finally {

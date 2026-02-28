@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { LogOut, Calendar, Image, Users, ImagePlus } from 'lucide-react';
 import BookingManagement from './BookingManagement';
 import CaseStudyManagement from './CaseStudyManagement';
@@ -27,27 +27,14 @@ function AdminDashboard() {
 
   const checkAdminAuth = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { user } = await api.getCurrentUser();
 
       if (!user) {
         navigate('/admin/login');
         return;
       }
 
-      const { data: adminData, error } = await supabase
-        .from('admins')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('is_active', true)
-        .maybeSingle();
-
-      if (error || !adminData) {
-        await supabase.auth.signOut();
-        navigate('/admin/login');
-        return;
-      }
-
-      setAdmin(adminData);
+      setAdmin(user);
     } catch (error) {
       navigate('/admin/login');
     } finally {
@@ -56,7 +43,7 @@ function AdminDashboard() {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await api.logout();
     navigate('/admin/login');
   };
 

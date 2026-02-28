@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { api } from '../lib/api';
 import { Check, X, Clock, DollarSign } from 'lucide-react';
 
 interface Booking {
@@ -28,14 +28,7 @@ function BookingManagement() {
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      let query = supabase
-        .from('bookings')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      const { data, error } = await query;
-
-      if (error) throw error;
+      const data = await api.getAllBookings();
       setBookings(data || []);
     } catch (error) {
       console.error('Error fetching bookings:', error);
@@ -46,12 +39,7 @@ function BookingManagement() {
 
   const updateBookingStatus = async (id: string, status: string) => {
     try {
-      const { error } = await supabase
-        .from('bookings')
-        .update({ status, updated_at: new Date().toISOString() })
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.updateBooking(id, { status, updated_at: new Date().toISOString() });
       fetchBookings();
     } catch (error) {
       console.error('Error updating booking:', error);
@@ -60,12 +48,7 @@ function BookingManagement() {
 
   const updatePaymentStatus = async (id: string, paymentStatus: string) => {
     try {
-      const { error } = await supabase
-        .from('bookings')
-        .update({ payment_status: paymentStatus, updated_at: new Date().toISOString() })
-        .eq('id', id);
-
-      if (error) throw error;
+      await api.updateBooking(id, { payment_status: paymentStatus, updated_at: new Date().toISOString() });
       fetchBookings();
     } catch (error) {
       console.error('Error updating payment:', error);
