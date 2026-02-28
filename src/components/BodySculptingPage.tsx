@@ -10,7 +10,7 @@ import Navbar from './Navbar';
 function BodySculptingPage() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeService, setActiveService] = useState<'waist' | 'breast' | 'liposuction' | 'abdomen' | 'buttocks' | 'thigh'>('waist');
+  const [activeService, setActiveService] = useState<'fatFilling' | 'breast' | 'liposuction' | 'abdomen' | 'buttocks' | 'thigh'>('fatFilling');
   const [caseStudies, setCaseStudies] = useState<any[]>([]);
 
   const images = [
@@ -20,7 +20,7 @@ function BodySculptingPage() {
   ];
 
   const services = [
-    { key: 'waist' as const, title: '直角腰', subtitle: '打造完美腰线' },
+    { key: 'fatFilling' as const, title: '脂肪填充', subtitle: '自然丰盈塑形' },
     { key: 'breast' as const, title: '隆胸', subtitle: '自然饱满胸型' },
     { key: 'liposuction' as const, title: '吸脂塑形', subtitle: '精准去除脂肪' },
     { key: 'abdomen' as const, title: '腹部塑形', subtitle: '平坦紧致腹部' },
@@ -29,14 +29,14 @@ function BodySculptingPage() {
   ];
 
   const serviceDetails = {
-    waist: {
-      title: '直角腰塑形',
-      description: '通过精准吸脂与肌肉塑形，打造90度完美腰臀比例',
+    fatFilling: {
+      title: '脂肪填充',
+      description: '采用自体脂肪移植技术，自然丰盈面部及身体轮廓',
       techniques: [
-        '腰部360度环形吸脂',
-        '后腰凹陷塑造',
-        '侧腰线条雕刻',
-        '腰臀比例黄金设计'
+        '面部脂肪填充',
+        '胸部脂肪填充',
+        '臀部脂肪填充',
+        '多部位综合塑形'
       ],
       images: [
         '/Gemini_Generated_Image_94iwds94iwds94iw.png',
