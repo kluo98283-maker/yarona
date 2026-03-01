@@ -5,9 +5,11 @@ import ImageCompareSlider from './ImageCompareSlider';
 import CTASection from './CTASection';
 import Footer from './Footer';
 import Navbar from './Navbar';
+import { useLanguage } from '../contexts/LanguageContext';
 
 function InjectionLiftingPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [activeService, setActiveService] = useState<'injection' | 'diamond' | 'midface' | 'smas' | 'single'>('injection');
 
   return (
@@ -18,10 +20,10 @@ function InjectionLiftingPage() {
       <section className="py-16 md:py-20 px-6 md:px-12 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-light mb-6 leading-relaxed tracking-wide" style={{color: '#1F1F1F'}}>
-            面部年轻化
+            {t('facialRejuvenation.title')}
           </h1>
           <p className="text-sm md:text-base font-light leading-relaxed mb-8 max-w-2xl mx-auto" style={{color: '#4B5563'}}>
-            非手术方式，轻松实现年轻化效果
+            {t('facialRejuvenation.subtitle')}
           </p>
           <button
             onClick={() => navigate('/booking')}
@@ -31,7 +33,7 @@ function InjectionLiftingPage() {
               color: '#FFFFFF'
             }}
           >
-            现在开始探索
+            {t('facialRejuvenation.exploreNow')}
           </button>
 
           {/* Before/After Images */}
@@ -58,18 +60,18 @@ function InjectionLiftingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 text-center">
             <h2 className="text-2xl md:text-3xl font-light mb-4 tracking-wide" style={{color: '#1F1F1F'}}>
-              服务项目
+              {t('facialRejuvenation.servicesTitle')}
             </h2>
             <p className="text-sm md:text-base font-light" style={{color: '#6B7280'}}>
-              无创年轻化，重塑自然美感
+              {t('facialRejuvenation.servicesSubtitle')}
             </p>
           </div>
 
           {/* Service Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-16">
             {[
-              { key: 'injection' as const, title: '注射提升', subtitle: '抚平动态皱纹' },
-              { key: 'diamond' as const, title: '7D钻石提升', subtitle: '恢复面部饱满' },
+              { key: 'injection' as const, title: t('facialRejuvenation.injection'), subtitle: t('facialRejuvenation.injectionDesc') },
+              { key: 'diamond' as const, title: t('facialRejuvenation.diamond'), subtitle: t('facialRejuvenation.diamondDesc') },
               { key: 'midface' as const, title: '面中三件套', subtitle: '综合提升改善' },
               { key: 'smas' as const, title: 'SMAS筋膜提升', subtitle: '深层紧致提升' },
               { key: 'single' as const, title: '单部位提升', subtitle: '精准局部改善' },
