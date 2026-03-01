@@ -8,6 +8,7 @@ import adminRoutes from './routes/admin.js';
 import bookingsRoutes from './routes/bookings.js';
 import casesRoutes from './routes/cases.js';
 import uploadRoutes from './routes/upload.js';
+import faqRoutes from './routes/faq.js';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/bookings', bookingsRoutes);
 app.use('/api/cases', casesRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/faq', faqRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });

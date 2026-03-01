@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
-import { LogOut, Calendar, Image, Users, ImagePlus } from 'lucide-react';
+import { LogOut, Calendar, Image, Users, ImagePlus, HelpCircle } from 'lucide-react';
 import BookingManagement from './BookingManagement';
 import CaseStudyManagement from './CaseStudyManagement';
 import SimpleCaseManagement from './SimpleCaseManagement';
@@ -135,6 +135,15 @@ function AdminDashboard() {
             >
               <Users className="w-5 h-5" />
               客户管理
+            </button>
+
+            <button
+              onClick={() => navigate('/admin/faq')}
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm transition hover:bg-white"
+              style={{color: '#6B7280'}}
+            >
+              <HelpCircle className="w-5 h-5" />
+              FAQ管理
             </button>
           </nav>
         </aside>

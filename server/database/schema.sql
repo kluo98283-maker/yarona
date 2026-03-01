@@ -4,6 +4,40 @@
 -- 创建数据库扩展
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- FAQ分类表
+CREATE TABLE IF NOT EXISTS faq_categories (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name_zh TEXT NOT NULL,
+  name_en TEXT NOT NULL,
+  name_fr TEXT NOT NULL,
+  name_ar TEXT NOT NULL,
+  name_es TEXT NOT NULL,
+  display_order INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- FAQ问题表
+CREATE TABLE IF NOT EXISTS faqs (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  category_id UUID REFERENCES faq_categories(id) ON DELETE SET NULL,
+  question_zh TEXT NOT NULL,
+  question_en TEXT NOT NULL,
+  question_fr TEXT NOT NULL,
+  question_ar TEXT NOT NULL,
+  question_es TEXT NOT NULL,
+  answer_zh TEXT NOT NULL,
+  answer_en TEXT NOT NULL,
+  answer_fr TEXT NOT NULL,
+  answer_ar TEXT NOT NULL,
+  answer_es TEXT NOT NULL,
+  display_order INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- 用户表
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
