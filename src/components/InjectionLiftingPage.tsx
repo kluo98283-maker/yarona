@@ -8,7 +8,7 @@ import Navbar from './Navbar';
 
 function InjectionLiftingPage() {
   const navigate = useNavigate();
-  const [activeService, setActiveService] = useState<'botox' | 'fillers' | 'midface' | 'smas' | 'single'>('botox');
+  const [activeService, setActiveService] = useState<'injection' | 'diamond' | 'midface' | 'smas' | 'single'>('injection');
 
   return (
     <div className="min-h-screen bg-white">
@@ -68,8 +68,8 @@ function InjectionLiftingPage() {
           {/* Service Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 mb-16">
             {[
-              { key: 'botox' as const, title: '肉毒素注射', subtitle: '抚平动态皱纹' },
-              { key: 'fillers' as const, title: '玻尿酸填充', subtitle: '恢复面部饱满' },
+              { key: 'injection' as const, title: '注射提升', subtitle: '抚平动态皱纹' },
+              { key: 'diamond' as const, title: '7D钻石提升', subtitle: '恢复面部饱满' },
               { key: 'midface' as const, title: '面中三件套', subtitle: '综合提升改善' },
               { key: 'smas' as const, title: 'SMAS筋膜提升', subtitle: '深层紧致提升' },
               { key: 'single' as const, title: '单部位提升', subtitle: '精准局部改善' },
@@ -110,21 +110,21 @@ function InjectionLiftingPage() {
           <div className="bg-gray-50 p-8 md:p-12 border" style={{borderColor: '#E5E7EB'}}>
             <div className="max-w-4xl mx-auto">
               <h3 className="text-xl md:text-2xl font-light mb-4" style={{color: '#1F1F1F'}}>
-                {activeService === 'botox' && '肉毒素注射'}
-                {activeService === 'fillers' && '玻尿酸填充'}
+                {activeService === 'injection' && '注射提升'}
+                {activeService === 'diamond' && '7D钻石提升'}
                 {activeService === 'midface' && '面中三件套提升'}
                 {activeService === 'smas' && 'SMAS筋膜提升'}
                 {activeService === 'single' && '单部位提升'}
               </h3>
               <p className="text-sm md:text-base mb-8 leading-relaxed" style={{color: '#6B7280'}}>
-                {activeService === 'botox' && '精准减少动态皱纹，抚平额头纹、鱼尾纹、川字纹'}
-                {activeService === 'fillers' && '恢复面部饱满度，填充凹陷，重塑年轻轮廓'}
+                {activeService === 'injection' && '精准减少动态皱纹，抚平额头纹、鱼尾纹、川字纹'}
+                {activeService === 'diamond' && '采用7D钻石提升技术，恢复面部饱满度，填充凹陷，重塑年轻轮廓'}
                 {activeService === 'midface' && '针对面中部位进行综合提升，改善苹果肌、泪沟、法令纹'}
                 {activeService === 'smas' && '深层筋膜层提升，从根本改善面部松弛下垂'}
                 {activeService === 'single' && '针对性改善局部问题，精准提升单一部位'}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {activeService === 'botox' && ['即刻见效', '无恢复期', '效果自然', '安全可靠'].map((feature, index) => (
+                {activeService === 'injection' && ['即刻见效', '无恢复期', '效果自然', '安全可靠'].map((feature, index) => (
                   <div
                     key={index}
                     className="flex items-start gap-3 p-4 bg-white border"
@@ -134,7 +134,7 @@ function InjectionLiftingPage() {
                     <span className="text-sm md:text-base" style={{color: '#4B5563'}}>{feature}</span>
                   </div>
                 ))}
-                {activeService === 'fillers' && ['立体塑形', '持久保湿', '安全可吸收', '即时见效'].map((feature, index) => (
+                {activeService === 'diamond' && ['立体塑形', '持久保湿', '安全可吸收', '即时见效'].map((feature, index) => (
                   <div
                     key={index}
                     className="flex items-start gap-3 p-4 bg-white border"
@@ -182,7 +182,7 @@ function InjectionLiftingPage() {
           <div className="bg-white p-8 md:p-12 border mt-8" style={{borderColor: '#E5E7EB'}}>
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {activeService === 'botox' && [
+                {activeService === 'injection' && [
                   '/3d931fc8d4b7d9ba6357f51f842da33d.jpg',
                   '/6492d5ffd9ae5616e415a8afbe984073.jpg',
                   '/Gemini_Generated_Image_94iwds94iwds94iw.png',
@@ -195,12 +195,12 @@ function InjectionLiftingPage() {
                   >
                     <img
                       src={image}
-                      alt={`肉毒素注射 案例 ${index + 1}`}
+                      alt={`注射提升 案例 ${index + 1}`}
                       className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
                     />
                   </div>
                 ))}
-                {activeService === 'fillers' && [
+                {activeService === 'diamond' && [
                   '/Gemini_Generated_Image_u1lac1u1lac1u1la.png',
                   '/Gemini_Generated_Image_fv9uk0fv9uk0fv9u.png',
                   '/3d931fc8d4b7d9ba6357f51f842da33d.jpg',
@@ -213,7 +213,7 @@ function InjectionLiftingPage() {
                   >
                     <img
                       src={image}
-                      alt={`玻尿酸填充 案例 ${index + 1}`}
+                      alt={`7D钻石提升 案例 ${index + 1}`}
                       className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
                     />
                   </div>
@@ -328,19 +328,19 @@ function InjectionLiftingPage() {
             {[
               {
                 id: 1,
-                title: '肉毒素除皱案例',
+                title: '注射提升案例',
                 category: '面部年轻化',
                 beforeImage: '/3d931fc8d4b7d9ba6357f51f842da33d.jpg',
                 afterImage: '/6492d5ffd9ae5616e415a8afbe984073.jpg',
-                description: '通过精准肉毒素注射，有效减少额头纹和鱼尾纹，面部整体更加年轻自然。'
+                description: '通过精准注射提升技术，有效减少额头纹和鱼尾纹，面部整体更加年轻自然。'
               },
               {
                 id: 2,
-                title: '玻尿酸填充案例',
+                title: '7D钻石提升案例',
                 category: '面部塑形',
                 beforeImage: '/6492d5ffd9ae5616e415a8afbe984073.jpg',
                 afterImage: '/3d931fc8d4b7d9ba6357f51f842da33d.jpg',
-                description: '采用玻尿酸填充技术，恢复面部饱满度，改善苹果肌和泪沟，重塑年轻轮廓。'
+                description: '采用7D钻石提升技术，恢复面部饱满度，改善苹果肌和泪沟，重塑年轻轮廓。'
               }
             ].map((caseStudy, index) => (
               <div key={caseStudy.id} className="bg-white border" style={{borderColor: '#E5E7EB'}}>
