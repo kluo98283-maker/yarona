@@ -4,9 +4,11 @@ import { useState } from 'react';
 import CTASection from './CTASection';
 import Footer from './Footer';
 import Navbar from './Navbar';
+import { useLanguage } from '../contexts/LanguageContext';
 
 function DentalPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [activeService, setActiveService] = useState<'whitening' | 'orthodontics' | 'veneers' | 'implants' | 'cleaning' | 'cosmetic'>('whitening');
 
   const services = [
@@ -124,10 +126,10 @@ function DentalPage() {
       <section className="py-16 md:py-20 px-6 md:px-12 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-light mb-6 leading-relaxed tracking-wide" style={{color: '#1F1F1F'}}>
-            牙齿美容
+            {t('dental.title')}
           </h1>
           <p className="text-sm md:text-base font-light leading-relaxed mb-8 max-w-2xl mx-auto" style={{color: '#4B5563'}}>
-            专业口腔美容，绽放自信笑容
+            {t('dental.subtitle')}
           </p>
           <button
             onClick={() => navigate('/booking')}
@@ -137,7 +139,7 @@ function DentalPage() {
               color: '#FFFFFF'
             }}
           >
-            现在开始探索
+            {t('dental.exploreNow')}
           </button>
 
           <div className="mt-12 flex justify-center">

@@ -6,9 +6,11 @@ import ImageCompareSlider from './ImageCompareSlider';
 import CTASection from './CTASection';
 import Footer from './Footer';
 import Navbar from './Navbar';
+import { useLanguage } from '../contexts/LanguageContext';
 
 function BodySculptingPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeService, setActiveService] = useState<'fatFilling' | 'breast' | 'liposuction' | 'abdomen' | 'buttocks' | 'thigh'>('fatFilling');
   const [caseStudies, setCaseStudies] = useState<any[]>([]);
@@ -162,10 +164,10 @@ function BodySculptingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-light mb-6 tracking-wide" style={{color: '#1F1F1F'}}>
-              身体塑形
+              {t('bodySculpting.title')}
             </h1>
             <p className="text-base md:text-lg mb-8 leading-relaxed" style={{color: '#6B7280'}}>
-              科学塑形方案，打造理想身材曲线
+              {t('bodySculpting.subtitle')}
             </p>
             <button
               onClick={() => navigate('/booking')}
@@ -174,7 +176,7 @@ function BodySculptingPage() {
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#101D29'}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1C2B3A'}
             >
-              现在开始探索
+              {t('bodySculpting.exploreNow')}
             </button>
           </div>
 

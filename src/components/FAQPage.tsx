@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface FAQItem {
   question: string;
@@ -75,6 +76,7 @@ const faqData: FAQItem[] = [
 
 export default function FAQPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('全部');
 
@@ -95,10 +97,10 @@ export default function FAQPage() {
       <section className="pt-24 pb-12 md:pt-32 md:pb-16 px-6 md:px-12 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-light mb-4 tracking-wide" style={{color: '#1F1F1F'}}>
-            常见问题
+            {t('faq.title')}
           </h1>
           <p className="text-base md:text-lg tracking-wide" style={{color: '#6B7280'}}>
-            解答您关于整形手术的疑问
+            {t('faq.subtitle')}
           </p>
         </div>
       </section>

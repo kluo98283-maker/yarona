@@ -4,9 +4,11 @@ import Footer from './Footer';
 import ImageCompareSlider from './ImageCompareSlider';
 import CTASection from './CTASection';
 import { useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 function HairTransplantPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [activeService, setActiveService] = useState<'fue' | 'hairline' | 'eyebrow' | 'beard'>('fue');
 
   const caseStudies = [
@@ -35,10 +37,10 @@ function HairTransplantPage() {
       <section className="py-16 md:py-20 px-6 md:px-12 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-light mb-6 leading-relaxed tracking-wide" style={{color: '#1F1F1F'}}>
-            植发
+            {t('hairTransplant.title')}
           </h1>
           <p className="text-sm md:text-base font-light leading-relaxed mb-8 max-w-2xl mx-auto" style={{color: '#4B5563'}}>
-            科学重塑浓密秀发，重拾自信形象
+            {t('hairTransplant.subtitle')}
           </p>
           <button
             onClick={() => navigate('/booking')}
@@ -48,7 +50,7 @@ function HairTransplantPage() {
               color: '#FFFFFF'
             }}
           >
-            现在开始探索
+            {t('hairTransplant.exploreNow')}
           </button>
 
           <div className="mt-12 flex justify-center">

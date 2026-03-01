@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import ImageCompareSlider from './ImageCompareSlider';
 import CTASection from './CTASection';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface DetailedCase {
   id: string;
@@ -36,6 +37,7 @@ const categoryMapReverse: Record<string, string> = {
 
 function CasesPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [cases, setCases] = useState<DetailedCase[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('全部');
@@ -69,10 +71,10 @@ function CasesPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h1 className="text-3xl md:text-4xl font-light mb-6 tracking-wide" style={{color: '#1F1F1F'}}>
-              真实案例展示
+              {t('cases.title')}
             </h1>
             <p className="text-base md:text-lg tracking-wide mb-8" style={{color: '#6B7280'}}>
-              见证每一次美丽蜕变
+              {t('cases.subtitle')}
             </p>
             <button
               onClick={() => navigate('/booking')}

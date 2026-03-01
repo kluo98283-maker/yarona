@@ -6,9 +6,11 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import ImageCompareSlider from './ImageCompareSlider';
 import CTASection from './CTASection';
+import { useLanguage } from '../contexts/LanguageContext';
 
 function FacialContourPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [activeFeature, setActiveFeature] = useState<'nose' | 'eyes' | 'lips'>('nose');
   const [caseStudies, setCaseStudies] = useState<any[]>([]);
 
@@ -70,10 +72,10 @@ function FacialContourPage() {
       <section className="py-16 md:py-20 px-6 md:px-12 bg-white md:bg-[#FAFAFA]">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-3xl md:text-5xl font-light mb-6 leading-relaxed tracking-wide" style={{color: '#1F1F1F'}}>
-            面部轮廓重塑
+            {t('facialContour.title')}
           </h1>
           <p className="text-sm md:text-base font-light leading-relaxed mb-8 max-w-2xl mx-auto" style={{color: '#4B5563'}}>
-            我们根据不同人种的面部结构和骨架特征，<br />结合个人审美偏好，科学地提供个性化整形解决方案。
+            {t('facialContour.subtitle')}
           </p>
           <button
             onClick={() => navigate('/booking')}
@@ -83,7 +85,7 @@ function FacialContourPage() {
               color: '#FFFFFF'
             }}
           >
-            现在开始探索
+            {t('facialContour.exploreNow')}
           </button>
         </div>
       </section>
